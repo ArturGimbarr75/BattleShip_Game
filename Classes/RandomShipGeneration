@@ -1,0 +1,151 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BattleShip
+{
+    class RandomShipGeneration
+    {
+        private char[,] map = new char[10, 10];
+        private OccupationType type;
+
+        public OccupationType getPanel(int row, int column)
+        {
+            return map[row, column];
+        }
+
+        public void ShowMap() // admin test
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                    Console.Write(map[i, j] + "  ");
+                Console.WriteLine();
+            }
+        }
+
+        public char[,] RandLocation()
+        {
+            CleanMap();
+
+            for (int i = 4; i > 0; i--)
+                for (int times = 0; times < 5 - i; times++)
+                    GererateShip(i);
+
+            return map;
+        }
+
+        private void GererateShip(int index) // W - woter, S - ship
+        {
+            Random rand = new Random();
+            bool ok = true;
+
+            while (ok)
+            {
+                ok = false;
+
+                int I = rand.Next(10), J = rand.Next(10);
+
+                switch (rand.Next(2))
+                {
+                    case 0:
+                        if (I - index + 1 >= 0)
+                        {
+                            for (int i = I; i > I - index; i--)
+                                if (map[i, J] == 'S')
+                                    ok = true;
+
+                            if (J - 1 >= 0)
+                                for (int i = I; i > I - index; i--)
+                                    if (map[i, J - 1] == 'S')
+                                        ok = true;
+
+                            if (J + 1 <= 9)
+                                for (int i = I; i > I - index; i--)
+                                    if (map[i, J + 1] == 'S')
+                                        ok = true;
+
+                            if (I - index + 1 > 0 && J - 1 >= 0)
+                                if (map[I - index, J - 1] == 'S')
+                                    ok = true;
+                            if (I - index + 1 > 0)
+                                if (map[I - index, J] == 'S')
+                                    ok = true;
+                            if (I - index + 1 > 0 && J + 1 < 10)
+                                if (map[I - index, J + 1] == 'S')
+                                    ok = true;
+                            if (I != 9 && J - 1 >= 0)
+                                if (map[I + 1, J - 1] == 'S')
+                                    ok = true;
+                            if (I != 9)
+                                if (map[I + 1, J] == 'S')
+                                    ok = true;
+                            if (I != 9 && J + 1 < 10)
+                                if (map[I + 1, J + 1] == 'S')
+                                    ok = true;
+
+                            if (!ok)
+                                for (int i = I; i > I - index; i--)
+                                    map[i, J] = 'S';
+                        }
+                        else
+                            ok = true;
+                        break;
+
+                    case 1:
+                        if (J - index + 1 >= 0)
+                        {
+                            for (int i = J; i > J - index; i--)
+                                if (map[I, i] == 'S')
+                                    ok = true;
+
+                            if (I - 1 >= 0)
+                                for (int i = J; i > J - index; i--)
+                                    if (map[I - 1, i] == 'S')
+                                        ok = true;
+
+                            if (I + 1 <= 9)
+                                for (int i = J; i > J - index; i--)
+                                    if (map[I + 1, i] == 'S')
+                                        ok = true;
+
+                            if (J - index + 1 > 0 && I - 1 >= 0)
+                                if (map[I - 1, J - index] == 'S')
+                                    ok = true;
+                            if (J - index + 1 > 0)
+                                if (map[I, J - index] == 'S')
+                                    ok = true;
+                            if (J - index + 1 > 0 && I + 1 < 10)
+                                if (map[I + 1, J - index] == 'S')
+                                    ok = true;
+                            if (J != 9 && I - 1 >= 0)
+                                if (map[I - 1, J + 1] == 'S')
+                                    ok = true;
+                            if (J != 9)
+                                if (map[I, J + 1] == 'S')
+                                    ok = true;
+                            if (J != 9 && I + 1 < 10)
+                                if (map[I + 1, J + 1] == 'S')
+                                    ok = true;
+
+                            if (!ok)
+                                for (int i = J; i > J - index; i--)
+                                    map[I, i] = 'S';
+                        }
+                        else
+                            ok = true;
+                        break;
+                }
+            }
+        }
+
+        private void CleanMap()
+        {
+            for (int i = 0; i < 10; i++)
+                for (int j = 0; j < 10; j++)
+                    map[i, j] = type.Empty;
+        }
+    }
+}
